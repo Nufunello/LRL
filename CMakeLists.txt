@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 project("LRTL")
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory("Tests")
+if (TESTS_ONLY)
+  add_subdirectory("Tests")
+endif()
