@@ -9,4 +9,5 @@ Purposes of tests:
 
 Tested environments(CMake):
   * Win 10, MinGW 64 (x86_64-8.1.0-win32-seh-rt_v6-rev0)
+  * Debian, GCC 8.3.0, G++ 8.3.0, native make
   //Hoping this list will include much more envs
