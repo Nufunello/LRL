@@ -1,7 +1,7 @@
 LRL - Less Routine Library provides with syntax sugar for trivial routines to reduce code amount when it's not necessary
 
 TESTS:
-To run tests you need specify TESTS_ONLY=TRUE while doing cmaking
+To run tests you need specify LRLTests=TRUE while doing cmaking
 
 Purposes of tests:
   1. Correctness
