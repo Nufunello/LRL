@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 project(LRLTests)
 
-# GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
-
 #Adding dependencies
 set(DEPENDENCIES_FOLDER "Dependencies")
 
@@ -16,6 +13,8 @@ set(SOURCE_FOLDER "src")
 add_executable(
   ${TARGET}
   "${SOURCE_FOLDER}/main.cpp"
+
+  "${SOURCE_FOLDER}/iterators/begin_end.cpp"
 )
 
 #Configuring GTest
@@ -28,3 +27,6 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(${TARGET})
+
+# GoogleTest requires at least C++11
+target_compile_features(${TARGET} PUBLIC cxx_std_11)
