@@ -11,18 +11,18 @@ set(TARGET ${PROJECT_NAME})
 set(SOURCE_FOLDER "src")
 
 add_executable(
-  ${TARGET}
-  "${SOURCE_FOLDER}/main.cpp"
+	${TARGET}
+	"${SOURCE_FOLDER}/main.cpp"
 
-  "${SOURCE_FOLDER}/iterators/begin_end.cpp"
+	"${SOURCE_FOLDER}/iterators/begin_end.cpp"
 )
 
 #Configuring GTest
 enable_testing()
 
 target_link_libraries(
-  ${TARGET}
-  gtest_main
+	${TARGET}
+	gtest_main
 )
 
 include(GoogleTest)
