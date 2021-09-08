@@ -17,8 +17,8 @@ namespace
 			...
 		) && sizeof...(Types) > 0;
 	}	
-	template<typename Lambda1, typename Lambda2, typename T>
-	constexpr bool isInvokeResultTypeSame()
+	template<typename T, typename Lambda1, typename Lambda2>
+	constexpr bool isInvokeResultTypeSame(Lambda1&&, Lambda2&&)
 	{
 		return areInvokeResultsTypeSame<Lambda1, Lambda2, 
 			T, std::add_rvalue_reference_t<T>,
@@ -32,16 +32,20 @@ namespace
 	{
 		using vector_type = std::vector<int>;	
 		{
-			constexpr auto begstd = [](auto&& vec){ return std::begin(vec); };
-			constexpr auto beglrl = [](auto&& vec){ return lrl::iterators::begin(vec); };	
-			static_assert(isInvokeResultTypeSame<decltype(begstd), decltype(beglrl), vector_type>()
-				, "calls of functions \"begin\" should return same type");
+			static_assert(isInvokeResultTypeSame<vector_type>(
+					  [](auto&& vec){ return std::begin(vec); }
+					, [](auto&& vec){ return lrl::iterators::begin(vec); }
+				)
+				, "calls of functions \"begin\" should return same type"
+			);
 		}	
 		{
-			constexpr auto endstd = [](auto&& vec){ return std::end(vec); };
-			constexpr auto endlrl = [](auto&& vec){ return lrl::iterators::end(vec); };	
-			static_assert(isInvokeResultTypeSame<decltype(endstd), decltype(endlrl), vector_type>()
-				, "calls of functions \"end\" should return same type");
+			static_assert(isInvokeResultTypeSame<vector_type>(
+					  [](auto&& vec){ return std::end(vec); }
+					, [](auto&& vec){ return lrl::iterators::end(vec); }
+				)
+				, "calls of functions \"end\" should return same type"
+			);
 		}	
 		const vector_type vector = {1, 2, 3, 4, 5, 6};
 		EXPECT_EQ(std::begin(vector), lrl::iterators::begin(vector)) 
