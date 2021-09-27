@@ -14,7 +14,9 @@ add_executable(
 	${TARGET}
 	"${SOURCE_FOLDER}/main.cpp"
 
-	"${SOURCE_FOLDER}/iterators/begin_end.cpp"
+	"${SOURCE_FOLDER}/functional/invoke_with_functor.cpp"
+	"${SOURCE_FOLDER}/iterators/begin.cpp"
+	"${SOURCE_FOLDER}/iterators/end.cpp"
 )
 
 #Configuring GTest
@@ -30,3 +32,6 @@ gtest_discover_tests(${TARGET})
 
 # GoogleTest requires at least C++11
 target_compile_features(${TARGET} PUBLIC cxx_std_11)
+
+#Adding lrl include to tests
+target_include_directories(LRLTests PRIVATE "include")
