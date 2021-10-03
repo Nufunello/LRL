@@ -8,7 +8,7 @@
 TEST(iterators, EndReturn)
 {
 	using vector_type = std::vector<int>;
-	constexpr bool endSameType = lrl::tests::types::isInvokeResultTypeSame<vector_type>
+	constexpr bool endSameType = lrl_tests::types::isInvokeResultTypeSame<vector_type>
 	(
 		  [](auto&& vec){ return (std::end(std::forward<decltype(vec)>(vec))); }
 		, [](auto&& vec){ return (lrl::iterators::end(std::forward<decltype(vec)>(vec))); }
