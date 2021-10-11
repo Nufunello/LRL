@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <type_traits>
+
 #include "lrl/algorithm/algorithm.hpp"
 
 namespace
@@ -32,18 +34,20 @@ TEST(algorithm, for_each_stl_random)
 		
 		EXPECT_FALSE(vector.empty());
 
-		std::for_each
+		decltype(auto) stlResult = std::for_each
 		(
 			std::begin(vector), std::end(vector),
 			generateConcatanateLambda(expected)
 		);
 
-		lrl::algorithm::for_each
+		decltype(auto) lrlResult = lrl::algorithm::for_each
 		(
 			std::begin(vector), std::end(vector),
 			generateConcatanateLambda(actual)
 		);
 
+		constexpr bool isReturnTypeSame = std::is_same_v<decltype(stlResult), decltype(lrlResult)>;
+		ASSERT_TRUE(isReturnTypeSame);
 		ASSERT_EQ(expected, actual);
 	}
 	{
@@ -52,18 +56,20 @@ TEST(algorithm, for_each_stl_random)
 		
 		EXPECT_FALSE(vector.empty());
 
-		std::for_each
+		decltype(auto) stlResult = std::for_each
 		(
 			std::begin(vector), std::end(vector),
 			generateConcatanateLambda(expected)
 		);
 
-		lrl::algorithm::for_each
+		decltype(auto) lrlResult = lrl::algorithm::for_each
 		(
 			std::begin(vector), std::end(vector),
 			generateConcatanateLambda(actual)
 		);
 
+		constexpr bool isReturnTypeSame = std::is_same_v<decltype(stlResult), decltype(lrlResult)>;
+		ASSERT_TRUE(isReturnTypeSame);
 		ASSERT_EQ(expected, actual);
 	}
 }
@@ -76,18 +82,20 @@ TEST(algorithm, for_each_stl_ordered)
 		
 		EXPECT_FALSE(set.empty());
 
-		std::for_each
+		decltype(auto) stlResult = std::for_each
 		(
 			std::begin(set), std::end(set),
 			generateConcatanateLambda(expected)
 		);
 
-		lrl::algorithm::for_each
+		decltype(auto) lrlResult = lrl::algorithm::for_each
 		(
 			std::begin(set), std::end(set),
 			generateConcatanateLambda(actual)
 		);
 
+		constexpr bool isReturnTypeSame = std::is_same_v<decltype(stlResult), decltype(lrlResult)>;
+		ASSERT_TRUE(isReturnTypeSame);
 		ASSERT_EQ(expected, actual);
 	}
 	{
@@ -96,18 +104,20 @@ TEST(algorithm, for_each_stl_ordered)
 		
 		EXPECT_FALSE(set.empty());
 
-		std::for_each
+		decltype(auto) stlResult = std::for_each
 		(
 			std::begin(set), std::end(set),
 			generateConcatanateLambda(expected)
 		);
 
-		lrl::algorithm::for_each
+		decltype(auto) lrlResult = lrl::algorithm::for_each
 		(
 			std::begin(set), std::end(set),
 			generateConcatanateLambda(actual)
 		);
 
+		constexpr bool isReturnTypeSame = std::is_same_v<decltype(stlResult), decltype(lrlResult)>;
+		ASSERT_TRUE(isReturnTypeSame);
 		ASSERT_EQ(expected, actual);
 	}
 }
@@ -119,17 +129,19 @@ TEST(algorithm, for_each_stl_empty)
 
 	EXPECT_TRUE(vector.empty());
 	
-	std::for_each
+	decltype(auto) stlResult = std::for_each
 	(
 		std::begin(vector), std::end(vector),
 		generateConcatanateLambda(expected)
 	);
 
-	lrl::algorithm::for_each
+	decltype(auto) lrlResult = lrl::algorithm::for_each
 	(
 		std::begin(vector), std::end(vector),
 		generateConcatanateLambda(actual)
 	);
 
+	constexpr bool isReturnTypeSame = std::is_same_v<decltype(stlResult), decltype(lrlResult)>;
+	ASSERT_TRUE(isReturnTypeSame);
 	ASSERT_EQ(expected, actual);
 }
