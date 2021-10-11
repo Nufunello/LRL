@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-#include "lrl/tests/types.hpp"
+#include "lrl_tests/types.hpp"
 #include "lrl/iterators/iterators.hpp"
 
 TEST(iterators, EndReturn)
