@@ -5,7 +5,7 @@
 #include "lrl_tests/types.hpp"
 #include "lrl/iterators/iterators.hpp"
 
-TEST(iterators, EndReturn)
+TEST(iterators, end_return)
 {
 	using vector_type = std::vector<int>;
 	constexpr bool endSameType = lrl_tests::types::isInvokeResultTypeSame<vector_type>

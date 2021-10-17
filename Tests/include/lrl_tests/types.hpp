@@ -22,7 +22,7 @@ namespace lrl_tests
 		{
 			using rvalue = std::add_rvalue_reference_t<InvokeType>;
 			using lvalue = std::add_lvalue_reference_t<InvokeType>;
-			using const_lvalue = std::add_const_t<lvalue>;
+			using const_lvalue = std::add_lvalue_reference_t<std::add_const_t<InvokeType>>;
 			return areInvokeResultsTypeSame<Lambda1, Lambda2, InvokeType, rvalue, lvalue, const_lvalue>();
 		}
 	}

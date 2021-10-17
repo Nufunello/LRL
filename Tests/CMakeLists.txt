@@ -16,6 +16,7 @@ add_executable(
 
 	"${SOURCE_FOLDER}/functional/invoke_with_functor.cpp"
 	"${SOURCE_FOLDER}/algorithm/for_each.cpp"
+	"${SOURCE_FOLDER}/iterators/tuple_iterator.cpp"
 	"${SOURCE_FOLDER}/iterators/begin.cpp"
 	"${SOURCE_FOLDER}/iterators/end.cpp"
 )

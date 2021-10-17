@@ -5,7 +5,7 @@
 #include "lrl_tests/types.hpp"
 #include "lrl/iterators/iterators.hpp"
 
-TEST(iterators, BeginReturn)
+TEST(iterators, begin_return)
 {
 	using vector_type = std::vector<int>;
 	constexpr bool beginSameType = lrl_tests::types::isInvokeResultTypeSame<vector_type>

@@ -8,31 +8,33 @@ namespace lrl
 {
 	namespace iterators
 	{
-#if __cplusplus >= 201703L
-
 		template <typename T>
 		struct begin_iterator
 		{
+			template <typename Container>
 #if __cplusplus >= 201703L
 			[[nodiscard]]
 #endif
-			constexpr decltype(auto) operator()(T&& container)
+			constexpr decltype(auto) operator()(Container&& container)
 			{
-				return (std::begin(std::forward<T>(container)));
+				return (std::begin(std::forward<Container>(container)));
 			}
 		};
 
 		template <typename T>
 		struct end_iterator
 		{
+			template <typename Container>
 #if __cplusplus >= 201703L
 			[[nodiscard]]
 #endif
-			constexpr decltype(auto) operator()(T&& container)
+			constexpr decltype(auto) operator()(Container&& container)
 			{
-				return (std::end(std::forward<T>(container)));
+				return (std::end(std::forward<Container>(container)));
 			}
 		};
+
+#if __cplusplus >= 201703L
 
 		template <template <typename> typename  BeginFunctor = begin_iterator, typename T>
 #if __cplusplus >= 201703L
