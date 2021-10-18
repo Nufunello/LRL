@@ -14,11 +14,13 @@ add_executable(
 	${TARGET}
 	"${SOURCE_FOLDER}/main.cpp"
 
-	"${SOURCE_FOLDER}/functional/invoke_with_functor.cpp"
-	"${SOURCE_FOLDER}/algorithm/for_each.cpp"
-	"${SOURCE_FOLDER}/iterators/tuple_iterator.cpp"
-	"${SOURCE_FOLDER}/iterators/begin.cpp"
-	"${SOURCE_FOLDER}/iterators/end.cpp"
+	"${SOURCE_FOLDER}/functional/functional/invoke_with_functor.cpp"
+	"${SOURCE_FOLDER}/functional/algorithm/for_each.cpp"
+	"${SOURCE_FOLDER}/functional/iterators/tuple_iterator.cpp"
+	"${SOURCE_FOLDER}/functional/iterators/begin.cpp"
+	"${SOURCE_FOLDER}/functional/iterators/end.cpp"
+
+	"${SOURCE_FOLDER}/integration/integration.cpp"
 )
 
 #Configuring GTest

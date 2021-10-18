@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include "lrl/iterators/iterators.hpp"
+#include "lrl/algorithm/algorithm.hpp"
 
 namespace lrl
 {
@@ -70,12 +71,15 @@ namespace lrl
 #endif
 			constexpr bool operator==(const tuple_iterator<OtherIndex, OtherTuple>&) const
 			{
-				return Index == OtherIndex 
-					&& std::is_same_v
-						<
-							  std::decay_t<Tuple>
-							, std::decay_t<OtherTuple>
-						>;
+				return false;
+			}
+
+#if __cplusplus >= 201703L
+			[[nodiscard]]
+#endif
+			constexpr bool operator==(const tuple_iterator<Index, Tuple>&) const
+			{
+				return true;
 			}
 
 			template <size_t OtherIndex, typename OtherTuple>
@@ -119,5 +123,47 @@ namespace lrl
 		struct end_iterator<std::tuple<Args...>>
 			: boundary_tuple_iterator<std::tuple_size_v<std::tuple<Args...>>>
 		{};
+	}
+
+	namespace algorithm
+	{
+		template <size_t BeginIndex, typename BeginTuple, size_t EndIndex, typename EndTuple, typename Callable>
+		struct for_each_algorithm<
+			lrl::iterators::tuple_iterator<BeginIndex, BeginTuple>,
+			lrl::iterators::tuple_iterator<EndIndex,   EndTuple>,
+			Callable>
+		{
+		private:
+			template <typename Current, typename End, typename Functor>
+			constexpr decltype(auto) invokeTillEnd(Current&& current, End&& end, Functor&& functor)
+			{
+				if constexpr(std::is_same_v<Current, End>)
+				{
+					return std::forward<Functor>(functor);
+				}
+				else
+				{
+					std::invoke(functor, *current);
+					return invokeTillEnd
+					(
+						  ++current
+						, std::forward<End>(end)
+						, std::forward<Functor>(functor)
+					);
+				}
+			}
+
+		public:
+			template <typename Begin, typename End, typename Functor>
+			constexpr decltype(auto) operator()(Begin&& begin, End&& end, Functor&& functor)
+			{
+				return invokeTillEnd
+				(
+					  std::forward<Begin>(begin)
+					, std::forward<End>(end)
+					, std::forward<Functor>(functor)
+				);
+			}
+		};
 	}
 }
