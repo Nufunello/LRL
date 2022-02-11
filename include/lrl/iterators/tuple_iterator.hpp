@@ -127,42 +127,34 @@ namespace lrl
 
 	namespace algorithm
 	{
-		template <size_t BeginIndex, typename BeginTuple, size_t EndIndex, typename EndTuple, typename Callable>
+		template <size_t BeginIndex, size_t EndIndex, typename Tuple, typename Callable>
 		struct for_each_algorithm<
-			lrl::iterators::tuple_iterator<BeginIndex, BeginTuple>,
-			lrl::iterators::tuple_iterator<EndIndex,   EndTuple>,
+			lrl::iterators::tuple_iterator<BeginIndex, Tuple>,
+			lrl::iterators::tuple_iterator<EndIndex,   Tuple>,
 			Callable>
 		{
 		private:
-			template <typename Current, typename End, typename Functor>
-			constexpr decltype(auto) invokeTillEnd(Current&& current, End&& end, Functor&& functor)
+			template <size_t CurrentIndex, typename... Args, typename Functor>
+			constexpr decltype(auto) invokeTillEnd(
+				const lrl::iterators::tuple_iterator<CurrentIndex, Args...>& current, 
+				Functor&& functor)
 			{
-				if constexpr(std::is_same_v<Current, End>)
+				if constexpr(CurrentIndex == EndIndex)
 				{
 					return std::forward<Functor>(functor);
 				}
 				else
 				{
 					std::invoke(functor, *current);
-					return invokeTillEnd
-					(
-						  ++current
-						, std::forward<End>(end)
-						, std::forward<Functor>(functor)
-					);
+					return invokeTillEnd(++current, std::forward<Functor>(functor));
 				}
 			}
 
 		public:
 			template <typename Begin, typename End, typename Functor>
-			constexpr decltype(auto) operator()(Begin&& begin, End&& end, Functor&& functor)
+			constexpr decltype(auto) operator()(Begin&& begin, End&&, Functor&& functor)
 			{
-				return invokeTillEnd
-				(
-					  std::forward<Begin>(begin)
-					, std::forward<End>(end)
-					, std::forward<Functor>(functor)
-				);
+				return invokeTillEnd(std::forward<Begin>(begin), std::forward<Functor>(functor));
 			}
 		};
 	}
