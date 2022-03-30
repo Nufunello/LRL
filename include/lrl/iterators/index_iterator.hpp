@@ -17,7 +17,7 @@ namespace lrl
 		{
 		public:
 			constexpr index_iterator(Container container)
-				: container{std::move(container)}
+				: container{container}
 			{}
 
 #if __cplusplus >= 201703L
@@ -83,9 +83,9 @@ namespace lrl
 #if __cplusplus >= 201703L
 			[[nodiscard]]
 #endif
-			constexpr bool operator!=(const index_iterator<OtherIndex, OtherContainer>& other) const
+			constexpr decltype(auto) operator!=(const index_iterator<OtherIndex, OtherContainer>& other) const
 			{
-				return !(*this == other);
+				return !(index_iterator::operator==(other));
 			}
 
 		protected:
@@ -120,7 +120,7 @@ namespace lrl
 
 		public:
 			template <typename Begin, typename End, typename Functor>
-			constexpr decltype(auto) operator()(Begin&& begin, End&& end, Functor&& functor)
+			constexpr decltype(auto) operator()(Begin&& begin, End&&, Functor&& functor)
 			{
 				return invoke(std::forward<Begin>(begin), std::forward<Functor>(functor));
 			}
