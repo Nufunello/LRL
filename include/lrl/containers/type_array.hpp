@@ -21,6 +21,11 @@ namespace lrl
 		template <typename ...Types>
 		class type_array
 		{
+		public:
+			constexpr static auto size()
+			{
+				return sizeof...(Types);
+			}
 		};
 
 		template <typename IntegralConstant, typename ...Types>
@@ -32,7 +37,7 @@ namespace lrl
 #endif
 			constexpr decltype(auto) operator()(const std::integral_constant<std::size_t, Index>&, Container&&)
 			{
-				using Result = decltype(getByIndex<Index>(std::make_index_sequence<sizeof...(Types)>()));
+				using Result = decltype(getByIndex<Index>(std::make_index_sequence<type_array<Types...>::size()>()));
 				return typename Result::WithT<lrl::containers::type>{};
 			}
 		private:
