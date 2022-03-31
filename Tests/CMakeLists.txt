@@ -20,6 +20,9 @@ add_executable(
 	"${SOURCE_FOLDER}/functional/iterators/begin.cpp"
 	"${SOURCE_FOLDER}/functional/iterators/end.cpp"
 
+	"${SOURCE_FOLDER}/functional/containers/get.cpp"
+	"${SOURCE_FOLDER}/functional/containers/type_array.cpp"
+
 	"${SOURCE_FOLDER}/integration/integration.cpp"
 )
 

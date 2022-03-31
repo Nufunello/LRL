@@ -4,6 +4,7 @@
 #include "gtest/gtest.h"
 
 #include "lrl/iterators/tuple_iterator.hpp"
+#include "lrl/iterators/type_array_iterator.hpp"
 
 namespace
 {
@@ -32,6 +33,15 @@ namespace
 			}
 		};
 	}
+
+	template <typename T>
+	decltype(auto) createCountTypeLambda(std::size_t& cTypes)
+	{
+		return [&cTypes](const auto type) mutable 
+		{ 
+			cTypes += type == lrl::containers::type<T>{} ? 1 : 0; 
+		};
+	}
 }
 
 TEST(integration, tuple_iterator_AND_for_each)
@@ -58,4 +68,39 @@ TEST(integration, tuple_iterator_AND_for_each)
 	ASSERT_NE(stlSum, 0);
 	ASSERT_NE(lrlSum, 0);
 	ASSERT_EQ(stlSum, lrlSum);
+}
+
+TEST(integration, type_array_iterator_AND_for_each)
+{
+	const auto typeArray = lrl::containers::type_array<std::string_view, std::string, float, int, float>{};
+	{
+		std::size_t cFloats = 0;
+		lrl::algorithm::for_each
+		(
+			lrl::iterators::begin(typeArray), 
+			lrl::iterators::end(typeArray), 
+			createCountTypeLambda<float>(cFloats)
+		);
+		ASSERT_EQ(cFloats, 2);
+	}
+	{
+		std::size_t cInt = 0;
+		lrl::algorithm::for_each
+		(
+			lrl::iterators::begin(typeArray), 
+			lrl::iterators::end(typeArray), 
+			createCountTypeLambda<int>(cInt)
+		);
+		ASSERT_EQ(cInt, 1);
+	}
+	{
+		std::size_t cChar = 0;
+		lrl::algorithm::for_each
+		(
+			lrl::iterators::begin(typeArray), 
+			lrl::iterators::end(typeArray), 
+			createCountTypeLambda<char>(cChar)
+		);
+		ASSERT_EQ(cChar, 0);
+	}
 }
