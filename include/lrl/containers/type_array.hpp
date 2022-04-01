@@ -41,9 +41,6 @@ namespace lrl
 				return typename Result::WithT<lrl::containers::type>{};
 			}
 		private:
-			template <typename T>
-			struct TD;
-
 			template <std::size_t Index, std::size_t... Indexes>
 			constexpr static decltype(auto) getByIndex(const std::index_sequence<Indexes...>&)
 			{
