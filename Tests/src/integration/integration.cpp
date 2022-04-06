@@ -159,7 +159,7 @@ TEST(integration, tuple_iterator_AND_find_if)
 TEST(integration, type_array_iterator_AND_find_if)
 {
 	const auto typeArray = lrl::containers::type_array<std::string_view, std::string, float, int, std::string>{};
-	const auto firstString = lrl::algorithm::find_if
+	constexpr auto firstString = lrl::algorithm::find_if
 		(
 			lrl::iterators::begin(typeArray), 
 			lrl::iterators::end(typeArray), 
@@ -170,7 +170,7 @@ TEST(integration, type_array_iterator_AND_find_if)
 			}
 		);
 	ASSERT_EQ(*firstString, lrl::containers::type<std::string>{});
-	const auto secondString = lrl::algorithm::find_if
+	constexpr auto secondString = lrl::algorithm::find_if
 		(
 			++firstString, 
 			lrl::iterators::end(typeArray), 
@@ -182,7 +182,7 @@ TEST(integration, type_array_iterator_AND_find_if)
 		);
 	ASSERT_EQ(*secondString, lrl::containers::type<std::string>{});
 
-	const auto integer = lrl::algorithm::find_if
+	constexpr auto integer = lrl::algorithm::find_if
 		(
 			lrl::iterators::begin(typeArray), 
 			lrl::iterators::end(typeArray), 
