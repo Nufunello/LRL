@@ -104,3 +104,54 @@ TEST(integration, type_array_iterator_AND_for_each)
 		ASSERT_EQ(cChar, 0);
 	}
 }
+
+TEST(integration, tuple_iterator_AND_find_if)
+{
+	using namespace std::string_view_literals;
+
+	const auto tuple = std::tuple{1, 2, "3"sv, '4', 5.f};
+	constexpr auto findInt = [](const auto& val)
+		{
+			using Argument = std::decay_t<decltype(val)>;
+			return std::conditional_t<std::is_same_v<Argument, int>, std::true_type, std::false_type>{};
+		};
+
+	const auto floa = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		[](const auto& val)
+		{
+			using Argument = std::decay_t<decltype(val)>;
+			return std::conditional_t<std::is_same_v<Argument, float>, std::true_type, std::false_type>{};
+		}
+	);
+	ASSERT_EQ(*floa, std::get<4>(tuple));
+
+	const auto firstInt = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		findInt
+	);
+	ASSERT_EQ(*firstInt, std::get<0>(tuple));
+	const auto secondInt = lrl::algorithm::find_if
+	(
+		++firstInt,
+		lrl::iterators::end(tuple),
+		findInt
+	);
+	ASSERT_EQ(*secondInt, std::get<1>(tuple));
+
+	const auto end = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		[](const auto& val)
+		{
+			using Argument = std::decay_t<decltype(val)>;
+			return std::conditional_t<std::is_same_v<Argument, double>, std::true_type, std::false_type>{};
+		}
+	);
+	ASSERT_EQ(end, lrl::iterators::end(tuple));
+}
