@@ -125,5 +125,42 @@ namespace lrl
 				return invoke(std::forward<Begin>(begin), std::forward<Functor>(functor));
 			}
 		};
+
+		template <size_t BeginIndex, size_t EndIndex, typename Container, typename Predicate>
+		struct find_if_algorithm<
+			iterators::index_iterator<BeginIndex, Container>,
+			iterators::index_iterator<EndIndex,   Container>,
+			Predicate>
+		{
+		private:
+			template <size_t CurrentIndex>
+			constexpr decltype(auto) invoke(const iterators::index_iterator<CurrentIndex, Container>& current)
+			{
+				return dispatch(current, std::invoke_result_t<Predicate, decltype(*current)>{});
+			}
+			constexpr decltype(auto) invoke(const iterators::index_iterator<EndIndex, Container>& end)
+			{
+				return (end);
+			}
+			template <size_t CurrentIndex>
+			constexpr decltype(auto) dispatch(const iterators::index_iterator<CurrentIndex, Container>& current, 
+				std::true_type) 
+			{
+				return (current);
+			}
+			template <size_t CurrentIndex>
+			constexpr decltype(auto) dispatch(const iterators::index_iterator<CurrentIndex, Container>& current, 
+				std::false_type) 
+			{
+				return invoke(++current);
+			}
+
+		public:
+			template <typename Begin, typename End, typename P>
+			constexpr decltype(auto) operator()(Begin&& begin, End&& end, P&&)
+			{
+				return invoke(std::forward<Begin>(begin));
+			}
+		};
 	}
 }
