@@ -38,10 +38,7 @@ namespace lrl
 		template <template <typename...> typename Functor, typename... Args>
 		constexpr decltype(auto) invoke_template_functor(Args&& ...arguments)
 		{
-			return 
-			(
-				Functor<std::decay_t<Args>...>{}(std::forward<Args>(arguments)...)
-			);
+			return functional::invoke(Functor<std::decay_t<Args>...>{}, std::forward<Args>(arguments)...);
 		}
 
 #endif
