@@ -42,6 +42,13 @@ namespace
 			cTypes += type == lrl::containers::type<T>{} ? 1 : 0; 
 		};
 	}
+
+	template <typename T>
+	constexpr auto is_same = [](const auto& val)
+	{
+		using Argument = std::decay_t<decltype(val)>;
+		return std::conditional_t<std::is_same_v<Argument, T>, std::true_type, std::false_type>{};
+	};
 }
 
 TEST(integration, tuple_iterator_AND_for_each)
@@ -103,4 +110,78 @@ TEST(integration, type_array_iterator_AND_for_each)
 		);
 		ASSERT_EQ(cChar, 0);
 	}
+}
+
+TEST(integration, tuple_iterator_AND_find_if)
+{
+	using namespace std::string_view_literals;
+
+	const auto tuple = std::tuple{1, 2, "3"sv, '4', 5.f};
+	const auto floa = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		is_same<float>
+	);
+	ASSERT_EQ(*floa, std::get<4>(tuple));
+
+	constexpr auto findInt = is_same<int>;
+	const auto firstInt = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		findInt
+	);
+	ASSERT_EQ(*firstInt, std::get<0>(tuple));
+	const auto secondInt = lrl::algorithm::find_if
+	(
+		++firstInt,
+		lrl::iterators::end(tuple),
+		findInt
+	);
+	ASSERT_EQ(*secondInt, std::get<1>(tuple));
+
+	const auto end = lrl::algorithm::find_if
+	(
+		lrl::iterators::begin(tuple),
+		lrl::iterators::end(tuple),
+		is_same<double>
+	);
+	ASSERT_EQ(end, lrl::iterators::end(tuple));
+}
+
+TEST(integration, type_array_iterator_AND_find_if)
+{
+	const auto typeArray = lrl::containers::type_array<std::string_view, std::string, float, int, std::string>{};
+	constexpr auto isString = is_same<std::string>;
+	constexpr auto firstString = lrl::algorithm::find_if
+		(
+			lrl::iterators::begin(typeArray), 
+			lrl::iterators::end(typeArray),
+			isString
+		);
+	ASSERT_EQ(*firstString, lrl::containers::type<std::string>{});
+	constexpr auto secondString = lrl::algorithm::find_if
+		(
+			++firstString, 
+			lrl::iterators::end(typeArray), 
+			isString
+		);
+	ASSERT_EQ(*secondString, lrl::containers::type<std::string>{});
+
+	constexpr auto integer = lrl::algorithm::find_if
+		(
+			lrl::iterators::begin(typeArray),
+			lrl::iterators::end(typeArray),
+			is_same<int>
+		);
+	ASSERT_EQ(*integer, lrl::containers::type<int>{});
+
+	constexpr auto end = lrl::algorithm::find_if
+		(
+			lrl::iterators::begin(typeArray), 
+			lrl::iterators::end(typeArray),
+			is_same<double>
+		);
+	ASSERT_EQ(end, lrl::iterators::end(typeArray));
 }

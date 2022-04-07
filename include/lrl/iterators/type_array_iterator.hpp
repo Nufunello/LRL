@@ -13,17 +13,16 @@ namespace lrl
 		template <typename ...Args>
 		struct begin_iterator<lrl::containers::type_array<Args...>>
 		{
-			template <typename TypeArray>
 #if __cplusplus >= 201703L
 			[[nodiscard]]
 #endif
-			constexpr decltype(auto) operator()(TypeArray&& typeArray)
+			constexpr decltype(auto) operator()(const lrl::containers::type_array<Args...>& typeArray)
 			{
 				return 
 				(
-					type_array_iterator<0, TypeArray>
+					type_array_iterator<0, lrl::containers::type_array<Args...>>
 					{
-						std::forward<TypeArray>(typeArray)
+						typeArray
 					}
 				);
 			}
@@ -32,17 +31,16 @@ namespace lrl
 		template <typename ...Args>
 		struct end_iterator<lrl::containers::type_array<Args...>>
 		{
-			template <typename TypeArray>
 #if __cplusplus >= 201703L
 			[[nodiscard]]
 #endif
-			constexpr decltype(auto) operator()(TypeArray&& typeArray)
+			constexpr decltype(auto) operator()(const lrl::containers::type_array<Args...>& typeArray)
 			{
 				return 
 				(
-					type_array_iterator<lrl::containers::type_array<Args...>::size(), TypeArray>
+					type_array_iterator<lrl::containers::type_array<Args...>::size(), lrl::containers::type_array<Args...>>
 					{
-						std::forward<TypeArray>(typeArray)
+						typeArray
 					}
 				);
 			}

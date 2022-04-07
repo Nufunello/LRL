@@ -13,8 +13,7 @@ namespace lrl
 		{
 			return 
 			(
-				std::invoke(Functor<std::decay_t<Args>...>{}, 
-				std::forward<Args>(arguments)...)
+				Functor<std::decay_t<Args>...>{}(std::forward<Args>(arguments)...)
 			);
 		}
 
