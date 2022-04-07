@@ -153,7 +153,7 @@ TEST(integration, tuple_iterator_AND_find_if)
 TEST(integration, type_array_iterator_AND_find_if)
 {
 	const auto typeArray = lrl::containers::type_array<std::string_view, std::string, float, int, std::string>{};
-	constexpr auto isString = is_same<std::string>;
+	constexpr auto isString = is_same<lrl::containers::type<std::string>>;
 	constexpr auto firstString = lrl::algorithm::find_if
 		(
 			lrl::iterators::begin(typeArray), 
@@ -173,7 +173,7 @@ TEST(integration, type_array_iterator_AND_find_if)
 		(
 			lrl::iterators::begin(typeArray),
 			lrl::iterators::end(typeArray),
-			is_same<int>
+			is_same<lrl::containers::type<int>>
 		);
 	ASSERT_EQ(*integer, lrl::containers::type<int>{});
 
@@ -181,7 +181,7 @@ TEST(integration, type_array_iterator_AND_find_if)
 		(
 			lrl::iterators::begin(typeArray), 
 			lrl::iterators::end(typeArray),
-			is_same<double>
+			is_same<lrl::containers::type<double>>
 		);
 	ASSERT_EQ(end, lrl::iterators::end(typeArray));
 }

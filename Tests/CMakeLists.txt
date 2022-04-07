@@ -14,9 +14,12 @@ add_executable(
 	${TARGET}
 	"${SOURCE_FOLDER}/main.cpp"
 
+	"${SOURCE_FOLDER}/functional/functional/invoke.cpp"
 	"${SOURCE_FOLDER}/functional/functional/invoke_with_functor.cpp"
+
 	"${SOURCE_FOLDER}/functional/algorithm/for_each.cpp"
 	"${SOURCE_FOLDER}/functional/algorithm/find_if.cpp"
+
 	"${SOURCE_FOLDER}/functional/iterators/tuple_iterator.cpp"
 	"${SOURCE_FOLDER}/functional/iterators/begin.cpp"
 	"${SOURCE_FOLDER}/functional/iterators/end.cpp"
