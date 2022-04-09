@@ -157,9 +157,93 @@ namespace lrl
 
 		public:
 			template <typename Begin, typename End, typename P>
-			constexpr decltype(auto) operator()(Begin&& begin, End&& end, P&&)
+			constexpr decltype(auto) operator()(Begin&& begin, End&&, P&&)
 			{
 				return invoke(std::forward<Begin>(begin));
+			}
+		};
+
+		template <size_t BeginIndex, size_t EndIndex, typename Container, typename Predicate>
+		struct remove_if_algorithm<
+			iterators::index_iterator<BeginIndex, Container>,
+			iterators::index_iterator<EndIndex,   Container>,
+			Predicate>
+		{
+		private:
+			template <std::size_t Index, typename Pred>
+			struct IndexPredicate{};
+
+			template <std::size_t... Indexes>
+			struct IndexCollector
+			{
+				template <std::size_t Index, typename Pred>
+				constexpr auto operator+(IndexPredicate<Index, Pred>) const
+					-> std::conditional_t<std::is_same_v<Pred, std::false_type>, IndexCollector<Indexes..., Index>, IndexCollector<Indexes...>>
+				{
+					return {};
+				}
+			};
+
+			template <size_t Index>
+			using AdvancedIterator = iterators::index_iterator<BeginIndex + Index, Container>;
+
+			template <size_t... Indexes>
+			constexpr static decltype(auto) collectIndexes(std::index_sequence<Indexes...>) 
+			{
+				return (IndexCollector<>{} + ... + IndexPredicate<Indexes, 
+					std::invoke_result_t<Predicate, decltype(*std::declval<AdvancedIterator<Indexes>>())>
+				>{});
+			}
+
+			template <typename Iterator>
+			struct Advancer
+			{
+				Iterator iterator;
+				constexpr Advancer(Iterator iterator)
+					: iterator{std::move(iterator)}
+				{}
+				template <typename T>
+				constexpr decltype(auto) operator+(const T&) const
+				{
+					auto iterator = ++std::move(this->iterator);
+					return Advancer<std::decay_t<decltype(iterator)>>{std::move(iterator)};
+				}
+			};
+			template <typename Iterator, size_t... Indexes>
+			constexpr static decltype(auto) advance(Iterator&& iterator, std::index_sequence<Indexes...>)
+			{
+				return (Advancer<std::decay_t<Iterator>>{std::forward<Iterator>(iterator)} + ... + Indexes).iterator;
+			}
+
+			template <template <typename...> typename T>
+			struct TemplatedType
+			{
+				template <typename... Args>
+				constexpr static decltype(auto) construct(Args&& ...args)
+				{
+					return T{std::forward<Args>(args)...};
+				}
+			};
+
+			template <template <typename...> typename Base, typename... Elements>
+			constexpr static auto getBase(const Base<Elements...>&) -> TemplatedType<Base>
+			{
+				return {};
+			}
+
+			template <size_t... Indexes>
+			constexpr static decltype(auto) getByIndexes(iterators::index_iterator<BeginIndex, Container> begin,
+				IndexCollector<Indexes...>) 
+			{
+				using Type = decltype(getBase(std::declval<Container>()));
+				return Type::construct(*advance(begin, std::make_index_sequence<Indexes - BeginIndex>())...);
+			}
+
+		public:
+			template <typename Begin, typename End, typename P>
+			constexpr decltype(auto) operator()(Begin&& begin, End&&, P&&)
+			{
+				return getByIndexes(std::forward<Begin>(begin), collectIndexes(std::make_index_sequence<EndIndex - BeginIndex>()));
 			}
 		};
 	}

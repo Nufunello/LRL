@@ -74,6 +74,38 @@ namespace lrl
 			);
 		}
 
+		template <typename Begin, typename End, typename Predicate>
+		struct remove_if_algorithm
+		{
+			template <typename B, typename E, typename P>
+			constexpr decltype(auto) operator()(B&& begin, E&& end, P&& functor)
+			{
+				return 
+				(
+					std::remove_if
+					(
+						std::forward<B>(begin), 
+						std::forward<E>(end),
+						std::forward<P>(functor)
+					)
+				);
+			}
+		};
+
+		template <template <typename, typename, typename> typename  RemoveIfFunctor = remove_if_algorithm, typename Begin, typename End, typename Predicate>
+		constexpr decltype(auto) remove_if(Begin&& begin, End&& end, Predicate&& functor)
+		{
+			return 
+			(
+				functional::invoke_template_functor<RemoveIfFunctor>
+				(
+					std::forward<Begin>(begin), 
+					std::forward<End>(end),
+					std::forward<Predicate>(functor)
+				)
+			);
+		}
+
 #endif
 	}
 }
