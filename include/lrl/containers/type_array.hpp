@@ -22,11 +22,25 @@ namespace lrl
 		class type_array
 		{
 		public:
+			template <typename... Args>
+			constexpr type_array(lrl::containers::type<Args>...) noexcept
+			{}
+
 			constexpr static auto size()
 			{
 				return sizeof...(Types);
 			}
+			template <typename... OtherTypes>
+			constexpr auto operator==(const type_array<OtherTypes...>&) const
+				-> std::conditional_t<std::is_same_v<type_array<Types...>, type_array<OtherTypes...>>, 
+				std::true_type, std::false_type>
+			{
+				return {};
+			}
 		};
+
+		template <typename ...Types>
+		type_array(lrl::containers::type<Types>...) -> type_array<Types...>;
 
 		template <typename IntegralConstant, typename ...Types>
 		struct getter<IntegralConstant, type_array<Types...>>

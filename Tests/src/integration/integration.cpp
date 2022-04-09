@@ -185,3 +185,31 @@ TEST(integration, type_array_iterator_AND_find_if)
 		);
 	ASSERT_EQ(end, lrl::iterators::end(typeArray));
 }
+
+TEST(integration, tuple_iterator_AND_remove_if)
+{
+	using namespace std::string_view_literals;
+
+	constexpr auto restTuple = std::tuple{"3"sv, '4', 5.f};
+	constexpr auto tuple = std::tuple_cat(std::tuple{1, 2}, restTuple);
+
+	const auto filteredTuple = lrl::algorithm::remove_if(
+		lrl::iterators::begin(tuple), lrl::iterators::end(tuple), 
+		is_same<int>);
+
+	ASSERT_EQ(filteredTuple, restTuple);
+}
+
+TEST(integration, type_array_AND_remove_if)
+{
+	using namespace std::string_view_literals;
+
+	constexpr auto restArray = lrl::containers::type_array<std::string_view, char, float>{};
+	constexpr auto array = lrl::containers::type_array<int, std::string_view, int , char, float>{};;
+
+	const auto filteredArray = lrl::algorithm::remove_if(
+		lrl::iterators::begin(array), lrl::iterators::end(array), 
+		is_same<lrl::containers::type<int>>);
+
+	ASSERT_EQ(filteredArray, restArray);
+}
